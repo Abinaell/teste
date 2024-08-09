@@ -5,7 +5,7 @@ TOKEN = '7227344806:AAGsi2PITxi6ab51w7WL79PsV9YLmNBWYAg'
 
 def start(update: Update, context: CallbackContext) -> None:
     # Define o link do mini app
-    web_app_url = 'https://your-mini-app-url.com'  # Substitua pelo URL do seu mini app
+    web_app_url = 'https://funny-fox-c1ee94.netlify.app/'  # Substitua pelo URL do seu mini app
 
     # Cria o botão de Play com o WebApp
     keyboard = [
