@@ -1,42 +1,27 @@
-import asyncio
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Application, CommandHandler, ContextTypes
+from telegram import Update
+from telegram.ext import Updater, CommandHandler, CallbackContext
+from flask import Flask, request
 
-TOKEN = '7227344806:AAGsi2PITxi6ab51w7WL79PsV9YLmNBWYAg'
+app = Flask(__name__)
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    # Define o link do mini app
-    web_app_url = 'https://funny-fox-c1ee94.netlify.app/'  # Substitua pelo URL do seu mini app
+# Token do seu bot do Telegram
+TELEGRAM_TOKEN = '7227344806:AAGsi2PITxi6ab51w7WL79PsV9YLmNBWYAg'
+WEB_APP_URL = 'https://funny-fox-c1ee94.netlify.app/'
 
-    # Cria o botão de Play com o link externo
-    keyboard = [
-        [InlineKeyboardButton("Play", url=web_app_url)]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
+def start(update: Update, context: CallbackContext) -> None:
+    update.message.reply_text('Clique no botão abaixo para iniciar o mini app!', reply_markup=telegram.ReplyKeyboardMarkup(
+        [[telegram.KeyboardButton('Play', url=WEB_APP_URL)]],
+        resize_keyboard=True,
+        one_time_keyboard=True
+    ))
 
-    # Envia a mensagem com o botão
-    await update.message.reply_text('Pressione Play para abrir o mini app!', reply_markup=reply_markup)
+def main():
+    updater = Updater(TELEGRAM_TOKEN)
+    dp = updater.dispatcher
+    dp.add_handler(CommandHandler('start', start))
 
-async def main():
-    # Cria a aplicação com o token do bot
-    application = Application.builder().token(TOKEN).build()
-
-    # Adiciona o handler para o comando /start
-    application.add_handler(CommandHandler('start', start))
-
-    # Inicia o bot
-    await application.run_polling()
+    updater.start_polling()
+    updater.idle()
 
 if __name__ == '__main__':
-    try:
-        # Verifica se já existe um loop de eventos rodando
-        loop = asyncio.get_running_loop()
-    except RuntimeError:  # Nenhum loop ativo
-        loop = None
-
-    if loop and loop.is_running():
-        print("Loop de eventos já está rodando. Executando main diretamente.")
-        asyncio.ensure_future(main())
-    else:
-        print("Iniciando novo loop de eventos.")
-        asyncio.run(main())
+    main()
