@@ -4,7 +4,7 @@ from flask import Flask, render_template
 app = Flask(__name__)
 
 # URL do arquivo JSON no GitHub
-url = 'https://raw.githubusercontent.com/username/repository/main/data.json'
+url = 'https://github.com/Abinaell/teste/blob/main/data.json'
 
 @app.route('/')
 def index():
