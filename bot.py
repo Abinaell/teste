@@ -1,3 +1,4 @@
+import asyncio
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, ContextTypes
 
@@ -27,5 +28,15 @@ async def main():
     await application.run_polling()
 
 if __name__ == '__main__':
-    import asyncio
-    asyncio.run(main())
+    try:
+        # Verifica se já existe um loop de eventos rodando
+        loop = asyncio.get_running_loop()
+    except RuntimeError:  # Nenhum loop ativo
+        loop = None
+
+    if loop and loop.is_running():
+        print("Loop de eventos já está rodando. Executando main diretamente.")
+        asyncio.ensure_future(main())
+    else:
+        print("Iniciando novo loop de eventos.")
+        asyncio.run(main())
